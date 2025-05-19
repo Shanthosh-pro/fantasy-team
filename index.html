@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy 11 Team Selector</title>
+    <script>
+        async function submitPlayers() {
+            let players = [];
+            for (let i = 1; i <= 15; i++) {
+                let name = document.getElementById(`name${i}`).value;
+                let role = document.getElementById(`role${i}`).value;
+                let team = document.getElementById(`team${i}`).value;
+                players.push({ name, role, team });
+            }
+            
+            const response = await fetch("/select_team", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ players })
+            });
+
+            const result = await response.json();
+            document.getElementById("output").innerText = JSON.stringify(result, null, 2);
+        }
+    </script>
+</head>
+<body>
+    <h1>Fantasy 11 Team Selector</h1>
+    <form id="playerForm">
+        <div id="playerInputs">
+            <script>
+                for (let i = 1; i <= 15; i++) {
+                    document.write(`<label>Player ${i} Name: <input type="text" id="name${i}"></label><br>`);
+                    document.write(`<label>Role (WK/Bat/AR/Bowl): <input type="text" id="role${i}"></label><br>`);
+                    document.write(`<label>Real-world Team: <input type="text" id="team${i}"></label><br><br>`);
+                }
+            </script>
+        </div>
+        <button type="button" onclick="submitPlayers()">Submit</button>
+    </form>
+    <pre id="output"></pre>
+</body>
+</html>
